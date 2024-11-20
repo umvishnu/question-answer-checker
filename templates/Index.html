@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question Answer Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .question h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e1e1e1;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        textarea:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+        }
+
+        .next-button {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.2);
+        }
+
+        .results {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .score-card {
+            background: white;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .score-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .score-card h3 {
+            color: #6a11cb;
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .missing-word {
+            background-color: #ffcdd2;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #c62828;
+            font-weight: bold;
+            position: relative;
+            cursor: help;
+        }
+
+        .extra-word {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #f57f17;
+            font-weight: bold;
+            position: relative;
+            cursor: help;
+        }
+
+        .word-analysis {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .analysis-section {
+            margin: 10px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .analysis-title {
+            color: #6a11cb;
+            font-weight: 500;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-tag {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .missing-tag {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .extra-tag {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+
+        .similar-tag {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 15px 0;
+            color: white;
+            font-weight: 500;
+        }
+
+        .excellent { background: linear-gradient(45deg, #11998e, #38ef7d); }
+        .good { background: linear-gradient(45deg, #2193b0, #6dd5ed); }
+        .average { background: linear-gradient(45deg, #f2994a, #f2c94c); }
+        .needs-work { background: linear-gradient(45deg, #eb3349, #f45c43); }
+
+        .score-value {
+            font-size: 2em;
+            font-weight: 600;
+            color: #6a11cb;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .answer-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .your-answer, .correct-answer {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #6a11cb;
+        }
+
+        .score-label {
+            font-weight: 500;
+            color: #666;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Question Answer Checker</h1>
+        
+        <div class="question">
+            <h3>Question {{ question.id }}:</h3>
+            <p>{{ question.question }}</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('check') }}">
+            <div>
+                <label>Your Answer:</label>
+                <textarea name="user_answer" rows="3" required>{% if user_answer %}{{ user_answer }}{% endif %}</textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Check Answer</button>
+                <button type="submit" class="next-button" formaction="{{ url_for('next_question') }}">Next Question</button>
+            </div>
+        </form>
+
+        {% if show_results %}
+        <div class="results">
+            <!-- Word Similarity Score -->
+            <div class="score-card">
+                <h3>Word Match Analysis</h3>
+                <div class="score-value">{{ word_score }}%</div>
+                <div class="feedback {{ word_feedback.class }}">
+                    {{ word_feedback.message }}
+                </div>
+            </div>
+
+            <!-- Meaning Similarity Score -->
+            <div class="score-card">
+                <h3>Meaning Similarity Analysis</h3>
+                <div class="score-value">{{ meaning_score }}%</div>
+                <div class="feedback {{ meaning_feedback.class }}">
+                    {{ meaning_feedback.message }}
+                </div>
+            </div>
+
+            <!-- Total Score -->
+            <div class="score-card">
+                <h3>Overall Performance</h3>
+                <div class="score-value">{{ total_score }}%</div>
+                <div class="feedback {{ total_feedback.class }}">
+                    {{ total_feedback.message }}
+                    <p class="feedback-details">{{ total_feedback.details }}</p>
+                </div>
+            </div>
+
+            <!-- Answer Analysis -->
+            <div class="score-card">
+                <h3>Answer Analysis</h3>
+                <div class="answer-comparison">
+                    <div class="your-answer">
+                        <span class="score-label">Your Answer:</span>
+                        <p>{{ analysis.highlighted_user | safe }}</p>
+                    </div>
+                    <div class="correct-answer">
+                        <span class="score-label">Correct Answer:</span>
+                        <p>{{ analysis.highlighted_correct | safe }}</p>
+                    </div>
+                </div>
+                
+                <div class="word-analysis">
+                    {% if analysis.missing_key_words %}
+                    <div class="analysis-section">
+                        <div class="analysis-title">Missing Key Words:</div>
+                        <div class="word-list">
+                            {% for word in analysis.missing_key_words %}
+                            <span class="word-tag missing-tag">{{ word }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if analysis.extra_words %}
+                    <div class="analysis-section">
+                        <div class="analysis-title">Extra Words Used:</div>
+                        <div class="word-list">
+                            {% for word in analysis.extra_words %}
+                            <span class="word-tag extra-tag">{{ word }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if analysis.similar_words %}
+                    <div class="analysis-section">
+                        <div class="analysis-title">Similar Words Found:</div>
+                        <div class="word-list">
+                            {% for correct, user in analysis.similar_words %}
+                            <span class="word-tag similar-tag">{{ user }} ≈ {{ correct }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
