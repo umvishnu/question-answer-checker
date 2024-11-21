@@ -7,6 +7,8 @@ from questions import questions
 import random
 import os
 import jinja2
+import logging 
+logging.basicConfig(level=logging.DEBUG) 
 
 # Download required NLTK data
 nltk.download('wordnet')
@@ -16,7 +18,7 @@ nltk.download('punkt')
 import os  # Add this at the top with other imports
 
 app = Flask(__name__, 
-    template_folder=os.path.abspath('templates'))
+    template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'))
 app.secret_key = 'your_secret_key_here'  # Required for session
 nlp = spacy.load('en_core_web_sm')
 
@@ -258,9 +260,15 @@ def next_question():
         session['current_question'] = random.choice(questions)
     return render_template('index.html', question=session['current_question'])
 
+# Add these error handlers here
 @app.errorhandler(jinja2.exceptions.TemplateNotFound)
 def template_not_found(e):
     return f"Template not found: {e.name}. Current template folder: {app.template_folder}", 500
 
+@app.errorhandler(500)
+def internal_error(error):
+    app.logger.error(f'Server Error: {error}')
+    return f"Server Error: {error}. Template folder: {app.template_folder}", 500
+    
 if __name__ == '__main__':
     app.run(debug=True)
