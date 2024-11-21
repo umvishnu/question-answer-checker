@@ -16,19 +16,17 @@ nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 
 
-# Flask initialization
+# New Flask initialization code
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
-# Print the template directory path for debugging
 print(f"Template Directory: {TEMPLATE_DIR}")
-print(f"Directory contents: {os.listdir(BASE_DIR)}")
+print(f"Available templates: {os.listdir(TEMPLATE_DIR)}")  # Debug line to show template files
 
 app = Flask(__name__,
-           template_folder=TEMPLATE_DIR,
-           static_folder=os.path.join(BASE_DIR, 'static'))
+           template_folder=TEMPLATE_DIR)
 
-# Enable debug mode
+# Enable debug mode and set secret key
 app.config['DEBUG'] = True
 app.secret_key = 'your_secret_key_here'
 nlp = spacy.load('en_core_web_sm')
