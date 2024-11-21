@@ -15,11 +15,22 @@ nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 
-import os  # Add this at the top with other imports
 
-app = Flask(__name__, 
-    template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'))
-app.secret_key = 'your_secret_key_here'  # Required for session
+# Flask initialization
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+# Print the template directory path for debugging
+print(f"Template Directory: {TEMPLATE_DIR}")
+print(f"Directory contents: {os.listdir(BASE_DIR)}")
+
+app = Flask(__name__,
+           template_folder=TEMPLATE_DIR,
+           static_folder=os.path.join(BASE_DIR, 'static'))
+
+# Enable debug mode
+app.config['DEBUG'] = True
+app.secret_key = 'your_secret_key_here'
 nlp = spacy.load('en_core_web_sm')
 
 def clean_text(text):
