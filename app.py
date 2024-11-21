@@ -5,13 +5,18 @@ from nltk.corpus import wordnet
 import nltk
 from questions import questions
 import random
+import os
+import jinja2
 
 # Download required NLTK data
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 
-app = Flask(__name__)
+import os  # Add this at the top with other imports
+
+app = Flask(__name__, 
+    template_folder=os.path.abspath('templates'))
 app.secret_key = 'your_secret_key_here'  # Required for session
 nlp = spacy.load('en_core_web_sm')
 
@@ -252,6 +257,10 @@ def next_question():
     else:
         session['current_question'] = random.choice(questions)
     return render_template('index.html', question=session['current_question'])
+
+@app.errorhandler(jinja2.exceptions.TemplateNotFound)
+def template_not_found(e):
+    return f"Template not found: {e.name}. Current template folder: {app.template_folder}", 500
 
 if __name__ == '__main__':
     app.run(debug=True)
