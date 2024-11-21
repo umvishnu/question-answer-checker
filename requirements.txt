@@ -3,6 +3,7 @@ gunicorn==20.1.0
 numpy==1.21.4
 scipy==1.7.3
 scikit-learn>=1.0.2
-spacy>=3.0.0
+spacy==3.7.5
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
 certifi>=2022.9.24
 nltk>=3.6.0
